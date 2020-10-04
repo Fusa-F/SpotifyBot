@@ -77,11 +77,55 @@ def handle_message(event):
     s = pd.Series([artist_items['name'], artist_items['id'], artist_items['genres'],artist_items['popularity'],artname_related_list],index=artist_df.columns)
     artist_df = artist_df.append(s,ignore_index=True)
 
+    # 関連アーティストを探す
+    artid_list_tail = 0
+    for i in range(1):
+        artid_list_head = artid_list_tail
+        artid_list_tail = len(artid_list)
+        for artid in artid_list[artid_list_head:artid_list_tail]:
+            spotapi_out = spotify.artist_related_artists(artid)
+            for artid_related in spotapi_out['artists']:
+                artist_df_bool = artist_df['artist_ID']==artid_related['id']
+                if artist_df_bool.sum()==0 and artid_related['popularity']>=20:
+                    # 類似のアーティストリストを作成
+                    spotapi_out_related = spotify.artist_related_artists(artid_related['id'])
+                    artname_related2_list = []
+                    for artname_related2 in spotapi_out_related['artists']:
+                        artname_related2_list.append(artname_related2['name'])
+                    artid_list.append(artid_related['id'])
+                    s = pd.Series([artid_related['name'], artid_related['id'], artid_related['genres'], 
+                                artid_related['popularity'], artname_related2_list], index=artist_df.columns)
+                    artist_df = artist_df.append(s,ignore_index=True)
+    
+    # アーティストの関係の辞書を作る
+    plt.figure(figsize = (50, 50))
+    artdic = {}
+    for i in range(len(artid_list)):
+        artdic[artist_df.iloc[i,0]] = []
+    for i in range(len(artid_list)):
+        for artname_related in artist_df.iloc[i,4]:
+            artdic[artist_df.iloc[i,0]].append(artname_related)
+
+    # 図の書き出し
+    G = nx.DiGraph()
+    nx.add_path(G, artdic)
+    pos = nx.spring_layout(G, k=0.3)
+    nx.draw_networkx_nodes(G, pos, node_color="w",alpha=1)
+    nx.draw_networkx_labels(G, pos, font_size=40, font_family="Yu Gothic", font_weight="bold")
+    nx.draw_networkx_edges(G, pos, alpha=0.6, edge_color="b", width=4)
+    plt.axis("off")
+    plt.savefig("image.svg")
+
+    image_message = ImageSendMessage(
+        image_url=f"https://fusafmusicbot.herokuapp.com/image.svg"
+    )
+
     line_bot_api.reply_message(
         event.reply_token,
         [
             TextSendMessage(text=name+'が好きなんだ~'),
-            TextSendMessage(text='ジャンルは'+artist_items['genres']+'だね')
+            TextSendMessage(text='ジャンルは'+artist_items['genres'][0]+'だね'),
+            image_message
         ]
     )
 
