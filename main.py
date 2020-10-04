@@ -60,13 +60,30 @@ def handle_follow(event):
 # テキストを送ったときの関数
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    txt = event.message.text
-    # artist_df = pd.DataFrame(
-    #     columns=['artist_name','artist_ID','genre','popularity','related_artist_names']
-    # )
+    # DataFrameを定義
+    artist_df = pd.DataFrame(
+        columns=['artist_name','artist_ID','genre','popularity','related_artist_names']
+    )
+    # 入力されたアーティスト名から情報を取得
+    name = event.message.text
+    spotapi_out = spotify.search(q='artist:' + name, type='artist')
+    artist_items = spotapi_out['artists']['items'][0]
+    artist_id = artist_items['id']
+    artid_list = [artist_id]
+    artname_related_list = []
+    spotapi_out_related = spotify.artist_related_artists(artist_id)
+    for artname_related in spotapi_out_related['artists']:
+        artname_related_list.append(artname_related['name'])
+    s = pd.Series([artist_items['name'], artist_items['id'], artist_items['genres'],artist_items['popularity'],artname_related_list],index=artist_df.columns)
+    artist_df = artist_df.append(s,ignore_index=True)
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=txt+'が好きなんだ~')
+        TextSendMessage(text=name+'が好きなんだ~')
+    )
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=artist_items['genres'])
     )
 
 
