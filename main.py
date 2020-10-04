@@ -79,13 +79,11 @@ def handle_message(event):
 
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=name+'が好きなんだ~')
+        [
+            TextSendMessage(text=name+'が好きなんだ~'),
+            TextSendMessage(text='ジャンルは'+artist_items['genres'][0]+'だね')
+        ]
     )
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text='ジャンルは'+'だね')
-    )
-
 
 if __name__ == "__main__":
 #    app.run()
