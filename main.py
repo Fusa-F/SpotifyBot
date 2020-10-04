@@ -114,7 +114,8 @@ def handle_message(event):
     nx.draw_networkx_labels(G, pos, font_size=40, font_family="Yu Gothic", font_weight="bold")
     nx.draw_networkx_edges(G, pos, alpha=0.6, edge_color="b", width=4)
     plt.axis("off")
-    image_path = plt.savefig(f"static/images/image/image.jpg")
+    image_path = f"static/images/image/image.jpg"
+    plt.savefig(image_path)
 
     image_message = ImageSendMessage(
         original_content_url=f"https://fusafmusicbot.herokuapp.com/{image_path}",
