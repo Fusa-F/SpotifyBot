@@ -1,0 +1,2 @@
+# SpotifyBot
+SpotifyAPIをLineBotで使ってみたい.
