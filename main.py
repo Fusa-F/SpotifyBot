@@ -117,7 +117,8 @@ def handle_message(event):
     plt.savefig("image.svg")
 
     image_message = ImageSendMessage(
-        image_url=f"https://fusafmusicbot.herokuapp.com/image.svg"
+        original_content_url=f"https://fusafmusicbot.herokuapp.com/image.svg",
+        preview_image_url=f"https://fusafmusicbot.herokuapp.com/image.svg"
     )
 
     line_bot_api.reply_message(
