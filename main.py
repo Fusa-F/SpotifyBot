@@ -17,7 +17,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import networkx as nx
 from community import community_louvain
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyClientCredentials 
 
 app = Flask(__name__)
 
