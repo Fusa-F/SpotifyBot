@@ -81,7 +81,7 @@ def handle_message(event):
         event.reply_token,
         [
             TextSendMessage(text=name+'が好きなんだ~'),
-            TextSendMessage(text='ジャンルは'+artist_items['genres'][0]+'だね')
+            TextSendMessage(text='ジャンルは'+artist_items['genres']+'だね')
         ]
     )
 
