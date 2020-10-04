@@ -4,4 +4,3 @@ spotipy==2.16.0
 pandas==1.1.2
 matplotlib==3.3.1
 networkx==2.5
-community_louvain
