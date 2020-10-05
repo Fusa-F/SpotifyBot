@@ -118,7 +118,7 @@ def handle_message(event):
             return 1/n
 
         nx.draw_networkx_nodes(G, pos, alpha=.6, node_color=list(map(calc_inverse,list(pr.values()))), cmap=plt.cm.GnBu, node_size=[200*(1/v) for v in pr.values()])
-        nx.draw_networkx_labels(G, pos, font_size=14, font_family='NotoSansJP-Bold.otf', font_weight="bold")
+        nx.draw_networkx_labels(G, pos, font_size=14, font_weight="bold")
         nx.draw_networkx_edges(G, pos, alpha=1, edge_color="c")
         plt.axis("off")
 
