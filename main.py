@@ -122,20 +122,23 @@ def handle_message(event):
             original_content_url=f"https://fusafmusicbot.herokuapp.com/{image_path}",
             preview_image_url=f"https://fusafmusicbot.herokuapp.com/{image_path}"
         )
+        
+        genres = ', '.join(artist_items['genres'])
 
         line_bot_api.reply_message(
             event.reply_token,
             [
                 TextSendMessage(text=name+'が好きなんだ~'),
-                TextSendMessage(text='ジャンルは'+artist_items['genres'][0]+'だね'),
-                image_message
+                TextSendMessage(text='ジャンルは'+genres+'だね'),
+                image_message,
+                TextSendMessage(text='関連性の高いアーティストはこんな感じ!')
             ]
         )
     except IndexError:
         line_bot_api.reply_message(
             event.reply_token,
             [
-                TextSendMessage(text=name+'ってアーティストは登録されていないみたい'),
+                TextSendMessage(text=name+'ってアーティストは登録されていないみたい\n(英語で登録されている場合もあるよ)'),
                 TextSendMessage(text='ほかには何が好き?'),
             ]
         )
