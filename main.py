@@ -86,7 +86,7 @@ def handle_message(event):
                 spotapi_out = spotify.artist_related_artists(artid)
                 for artid_related in spotapi_out['artists']:
                     artist_df_bool = artist_df['artist_ID']==artid_related['id']
-                    if artist_df_bool.sum()==0 and artid_related['popularity']>=20:
+                    if artist_df_bool.sum()==0 and artid_related['popularity']>=10:
                         # 類似のアーティストリストを作成
                         spotapi_out_related = spotify.artist_related_artists(artid_related['id'])
                         artname_related2_list = []
@@ -98,7 +98,7 @@ def handle_message(event):
                         artist_df = artist_df.append(s,ignore_index=True)
         
         # アーティストの関係の辞書を作る
-        plt.figure(figsize = (50, 50))
+        plt.figure(figsize = (16, 16))
         artdic = {}
         for i in range(len(artid_list)):
             artdic[artist_df.iloc[i,0]] = []
@@ -109,10 +109,15 @@ def handle_message(event):
         # 図の書き出し
         G = nx.DiGraph()
         nx.add_path(G, artdic)
-        pos = nx.spring_layout(G, k=0.3)
-        nx.draw_networkx_nodes(G, pos, node_color="w",alpha=1)
-        nx.draw_networkx_labels(G, pos, font_size=40, font_family="Yu Gothic", font_weight="bold")
-        nx.draw_networkx_edges(G, pos, alpha=0.6, edge_color="b", width=4)
+        # pos = nx.spring_layout(G, k=0.3)
+        pos = nx.circular_layout(G)
+        pr = nx.pagerank(G)
+        def calc_inverse(n):
+            return 1/n
+
+        nx.draw_networkx_nodes(G, pos, alpha=.6, node_color=list(map(calc_double,list(pr.values()))), cmap=plt.cm.GnBu, node_size=[200*(1/v) for v in pr.values()])
+        nx.draw_networkx_labels(G, pos, font_size=14, font_family='IPAexGothic', font_weight="bold")
+        nx.draw_networkx_edges(G, pos, alpha=1, edge_color="c")
         plt.axis("off")
 
         image_path = "static/images/image.jpg"
