@@ -13,7 +13,9 @@ from matplotlib.font_manager import FontProperties
 import networkx as nx
 from spotipy.oauth2 import SpotifyClientCredentials 
 
-# fontprop = FontProperties(fname='static/fonts/NotoSansJP-Bold.otf', size=10)
+fontprop = FontProperties(fname='/.fonts/NotoSansJP-Bold.otf')
+nx.set_fontproperties(font_prop)
+
 app = Flask(__name__)
 
 # 環境変数取得
