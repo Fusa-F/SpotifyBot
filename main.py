@@ -123,7 +123,7 @@ def handle_message(event):
         datas = nx.draw_networkx_labels(G, pos, font_size=14, font_weight="bold")
         nx.draw_networkx_edges(G, pos, alpha=1, edge_color="c")
         for t in datas.values():
-            t.set_fontproperties(font_prop)
+            t.set_fontproperties(fontprop)
         
         plt.axis("off")
 
